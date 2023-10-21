@@ -4,12 +4,12 @@ from flask import Flask, render_template, request, jsonify
 app = Flask(__name__)
 
 # Put your key here
-openai.api_key = "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"
+openai.api_key = ""
 
 # TODO: Test and modify variations of this prompt
 # I want variations of the prompt that make it adhere to the script a bit less
 # Initialize history with a system context prompt
-history = [{
+INITIAL_HISTORY = [{
     "role": "system",
     "content": '''You are a helpful, compassionate, assistant and well listening companion. Try to be conversational. The user has a major stressor in their life and you should assist them in guiding them through the stressor.
                 Help them work through their stressors by performing a Reflective Questioning Activity. Some guides on questions to ask are:
@@ -29,6 +29,8 @@ history = [{
         "content": "Think of a particular situation where you felt stressed or had a negative emotion, which you can try to reflect on as you go through this activity. It could be a current situation, one in the past, or one you anticipate in the future."
     }
 ]
+
+history = INITIAL_HISTORY
 
 
 # Temperature < 1 seemed to be very strict in following the guidelines
@@ -65,6 +67,13 @@ def get_bot_response():
     response = get_completion(userText)
     # return str(bot.get_response(userText))
     return response
+
+
+@app.route("/reset")
+def reset():
+    global history 
+    history = INITIAL_HISTORY
+    return ""
 
 
 if __name__ == '__main__':
