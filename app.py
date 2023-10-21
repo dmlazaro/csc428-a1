@@ -4,7 +4,7 @@ from flask import Flask, render_template, request, jsonify
 app = Flask(__name__)
 
 # Put your key here
-openai.api_key = "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"
+openai.api_key = ""
 
 current_q = 0
 
