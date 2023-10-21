@@ -1,119 +1,134 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>RQA Bot</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <style>
-        * {
-            box-sizing: border-box
-        }
-/* Set height of body and the document to 100% */
-        body, html {
+        body,
+        html {
             height: 100%;
             margin: 0;
-            font-family: Arial;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f4f4;
         }
-        #chatbox {
-        margin-left: auto;
-        margin-right: auto;
-        width: 40%;
-        margin-top: 60px;
-      }
-      #userInput {
-        margin-left: auto;
-        margin-right: auto;
-        width: 40%;
-        margin-top: 60px;
-      }
-      #textInput {
-        width: 90%;
-        border: none;
-        border-bottom: 3px solid black;
-        font-family: monospace;
-        font-size: 17px;
-      }
-      .userText {
-        color: white;
-        font-family: monospace;
-        font-size: 17px;
-        text-align: right;
-        line-height: 30px;
-      }
-      .userText span {
-        background-color: #808080;
-        padding: 10px;
-        border-radius: 2px;
-      }
-      .botText {
-        color: white;
-        font-family: monospace;
-        font-size: 17px;
-        text-align: left;
-        line-height: 30px;
-      }
-      .botText span {
-        background-color: #4169e1;
-        padding: 10px;
-        border-radius: 2px;
-      }
-      #tidbit {
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        width: 300px;
-      }
-      .boxed {
-        margin-left: auto;
-        margin-right: auto;
-        width: 78%;
-        margin-top: 60px;
-        border: 1px solid green;
-      }
+
+        h1,
+        h4 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .boxed {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #chatbox,
+        #userInput {
+            margin: auto;
+            padding: 10px;
+        }
+
+        #textInput {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            box-sizing: border-box;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .userText,
+        .botText {
+            padding: 10px;
+            margin: 10px;
+            border-radius: 10px;
+        }
+
+        .userText {
+            text-align: right;
+            background-color: #cce5ff;
+        }
+
+        .botText {
+            background-color: #f2f2f2;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
+
 <body>
-<div>
-        <h1 align="center"><b>RQA Chat</b></h1>
-        <h4 align="center"><b>A chatbot to help you analyze stressors in your life</b></h4>
-    <p align="center">Note: This system sends all user inputs to OpenAi's GPT API. Inputs should not be considered secure or confidential</p>
-        <div class="boxed">
-            <div>
-                <div id="chatbox">
-                    <p class="botText">
-                        <span>Think of a particular situation where you felt stressed or had a negative emotion, which you can try to reflect on as you go through this activity. It could be a current situation, one in the past, or one you anticipate in the future.</span>
-                    </p>
-                </div>
-                <div id="userInput">
-                    <input id="textInput" type="text" name="msg" placeholder="Message" />
-                </div>
-            </div>
-            <script>
+    <div class="boxed">
+        <h1><b>RQA Chat</b></h1>
+        <h4><b>A chatbot to help you analyze stressors in your life</b></h4>
+        <p align="center">Note: This system sends all user inputs to OpenAi's GPT API. Inputs should not be considered secure or confidential.</p>
+        <div id="chatbox">
+            <p class="botText">
+                <span>Think of a particular situation where you felt stressed or had a negative emotion, which you can try to reflect on as you go through this activity. It could be a current situation, one in the past, or one you anticipate in the future.</span>
+            </p>
+        </div>
+        <div id="userInput">
+            <input id="textInput" type="text" name="msg" placeholder="Message" />
+        </div>
+        <button id="clearChat" onclick="clearMessageHistory()">Clear</button>
+    </div>
+    <script>
                 const inputBox = $("#textInput")
+                const chatBox = $("#chatbox")
 
                 function getBotResponse() {
-                    var rawText = inputBox.val();
-                    var userHtml = '<p class="userText"><span>' + rawText + "</span></p>";
+                    const rawText = inputBox.val();
+                    const userHtml = '<p class="userText"><span>' + rawText + "</span></p>";
                     inputBox.val("");
-                    $("#chatbox").append(userHtml);
+                    chatBox.append(userHtml);
                     document
                         .getElementById("userInput")
                         .scrollIntoView({ block: "start", behavior: "smooth" });
                     $.get("/get", { msg: rawText }).done(function (data) {
-                        var botHtml = '<p class="botText"><span>' + data + "</span></p>";
-                        $("#chatbox").append(botHtml);
+                        const botHtml = '<p class="botText"><span>' + data + "</span></p>";
+                        chatBox.append(botHtml);
                         document
                             .getElementById("userInput")
                             .scrollIntoView({ block: "start", behavior: "smooth" });
                     });
                 }
+
+                function clearMessageHistory() {
+                    console.log(chatBox)
+                    document.getElementById("chatbox").innerHTML = "";
+                    const initialPrompt = '<p class="botText"><span> Think of a particular situation where you felt stressed or had a negative emotion, which you can try to reflect on as you go through this activity. It could be a current situation, one in the past, or one you anticipate in the future.</span></p>'
+                    chatBox.append(initialPrompt)
+                    inputBox.val("");
+
+                    $.post("/clear")
+                }
+
                 inputBox.keypress(function (e) {
                     if (e.which === 13) {
                         getBotResponse();
                     }
                 });
+
             </script>
-        </div>
-    </div>
 </body>
+
 </html>
