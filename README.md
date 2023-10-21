@@ -9,7 +9,7 @@ To use this chatbot, you must enter an OpenAI API key in `app.py`
 Project is written as a simple flask server. To run, set up python virtual env:
 
 ```bash
-python -m venv ./venv
+python3 -m venv ./venv
 source ./venv/bin/activate
 ```
 
