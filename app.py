@@ -4,7 +4,7 @@ from flask import Flask, render_template, request, jsonify
 app = Flask(__name__)
 
 # Put your key here
-openai.api_key = ""
+openai.api_key = "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"
 
 # TODO: Test and modify variations of this prompt
 # I want variations of the prompt that make it adhere to the script a bit less
@@ -38,13 +38,12 @@ history = INITIAL_HISTORY
 # TODO: Test effects of different temperature, top_p, frequency_penalty, and presence_penalty
 def get_completion(prompt, model="gpt-3.5-turbo"):
     # Append the users input to the context HISTORY
-    HISTORY.append({"role": "user", "content": prompt})
-    messages = HISTORY
-    print(messages)
+    history.append({"role": "user", "content": prompt})
+    print(history)
 
     response = openai.ChatCompletion.create(
         model=model,
-        messages=messages,
+        messages=history,
         temperature=1,
         max_tokens=256,
         top_p=1,
@@ -52,7 +51,7 @@ def get_completion(prompt, model="gpt-3.5-turbo"):
         presence_penalty=0.10
     )
     print(response)
-    HISTORY.append({"role": "assistant", "content": response.choices[0].message["content"]})
+    history.append({"role": "assistant", "content": response.choices[0].message["content"]})
     return response.choices[0].message["content"]
 
 
