@@ -198,7 +198,7 @@
             });
           });
           resetButton.click((e) => {
-            $.get("/reset").done(() => {
+            $.post("/clear").done(() => {
               inputBox.val("");
               location.reload();
             });

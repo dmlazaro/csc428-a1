@@ -36,10 +36,10 @@ history = INITIAL_HISTORY
 # Temperature < 1 seemed to be very strict in following the guidelines
 # Temperature range 0 - 2
 # TODO: Test effects of different temperature, top_p, frequency_penalty, and presence_penalty
-def get_completion(prompt, model="gpt-4"):
-    # Append the users input to the context history
-    history.append({"role": "user", "content": prompt})
-    messages = history
+def get_completion(prompt, model="gpt-3.5-turbo"):
+    # Append the users input to the context HISTORY
+    HISTORY.append({"role": "user", "content": prompt})
+    messages = HISTORY
     print(messages)
 
     response = openai.ChatCompletion.create(
@@ -52,7 +52,7 @@ def get_completion(prompt, model="gpt-4"):
         presence_penalty=0.10
     )
     print(response)
-    history.append({"role": "assistant", "content": response.choices[0].message["content"]})
+    HISTORY.append({"role": "assistant", "content": response.choices[0].message["content"]})
     return response.choices[0].message["content"]
 
 
@@ -69,11 +69,11 @@ def get_bot_response():
     return response
 
 
-@app.route("/reset")
-def reset():
+@app.route("/clear", methods=['POST'])
+def clear_chat():
     global history 
     history = INITIAL_HISTORY
-    return ""
+    return "True"
 
 
 if __name__ == '__main__':
