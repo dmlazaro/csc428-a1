@@ -4,7 +4,21 @@ from flask import Flask, render_template, request, jsonify
 app = Flask(__name__)
 
 # Put your key here
-openai.api_key = ""
+openai.api_key = "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"
+
+current_q = 0
+
+questions = [
+    "What’s the situation? Feel free to explain it in as much detail as you’d like.",
+    "What part of the situation is most troubling?",
+    "What are you thinking to yourself?",
+    "What thought is the most troubling?",
+    "What do you feel when you think this?",
+    "When you have these feelings, what actions do you take? What actions do you avoid?",
+    "Re-type the summary of the situation in the following format:\n\tTrigger:\n\tThought:\n\tFeeling:\n\tBehavior:",
+    "Consider whether the trigger truly justifies this type of thinking. Write your thoughts.",
+    "If you were to explore an alternative line of thinking, how would you do it?",
+]
 
 # TODO: Test and modify variations of this prompt
 # I want variations of the prompt that make it adhere to the script a bit less
@@ -55,6 +69,16 @@ def get_completion(prompt, model="gpt-3.5-turbo"):
 @app.route('/')
 def hello_world():  # put application's code here
     return render_template('index.html')
+
+
+@app.route("/next")
+def next_question():
+    global current_q
+    current_q += 1
+    if (current_q > 8):
+        return get_completion("Tell the user that they have completed the Reflective Questioning Activity"
+                              "Summarize the interaction, including any important insights, and then wish them well.")
+    return get_completion(f"Ask the USER the following question (DO NOT ANSWER IT YOURSELF):\n\"{questions[current_q]}\"")
 
 
 @app.route("/get")
